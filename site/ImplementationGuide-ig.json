@@ -1,0 +1,51 @@
+{
+  "resourceType": "ImplementationGuide",
+  "id": "hl7.cql-null",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><h2>CQL</h2><p>The official URL for this implementation guide is: </p><pre>http://cql.hl7.org/ImplementationGuide/ig</pre></div>"
+  },
+  "url": "http://cql.hl7.org/ImplementationGuide/ig",
+  "version": "1.3",
+  "name": "CQL",
+  "title": "Clinical Quality Language Specification",
+  "status": "draft",
+  "experimental": false,
+  "publisher": "HL7",
+  "packageId": "hl7.cql",
+  "license": "CC0-1.0",
+  "fhirVersion": [
+    "4.0.0"
+  ],
+  "definition": {
+    "resource": [
+      {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/implementationguide-page",
+            "valueUri": "Binary-binary-fhirpath-grammar.html"
+          }
+        ],
+        "reference": {
+          "reference": "Binary/binary-fhirpath-grammar"
+        }
+      },
+      {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/implementationguide-page",
+            "valueUri": "Binary-binary-cql-grammar.html"
+          }
+        ],
+        "reference": {
+          "reference": "Binary/binary-cql-grammar"
+        }
+      }
+    ],
+    "page": {
+      "nameUrl": "index.html",
+      "title": "CQL Specification",
+      "generation": "html"
+    }
+  }
+}

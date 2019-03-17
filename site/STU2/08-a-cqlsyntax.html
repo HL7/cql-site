@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<!-- saved from url=(0043)http://hl7.org/fhir/2016May/FHIRPath.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+  <title>Appendix A – CQL Syntax Formal Specification</title>
+
+  
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="http://cql.hl7.org" name="author"/>
+
+  <link rel="stylesheet" href="dist/fhir.css"/>
+  <link rel="Prev" href="history.html"/>
+
+    <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="dist/bootstrap.css"/>
+  <link rel="stylesheet" href="dist/bootstrap-fhir.css"/>
+
+    <!-- Project extras -->
+  <link rel="stylesheet" href="dist/project.css"/>
+  <link rel="stylesheet" href="dist/pygments-manni.css"/>
+	<link rel="stylesheet" href="dist/jquery-ui.css"/>
+	<link rel="stylesheet" href="dist/cql.css"/>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- [if lt IE 9]>
+  <script src="./assets/js/html5shiv.js"></script>
+  <script src="./assets/js/respond.min.js"></script>
+  <![endif] -->
+
+    <!-- Favicons -->
+  <link sizes="144x144" rel="apple-touch-icon-precomposed" href="dist/apple-touch-icon-144-precomposed.png"/>
+  <link sizes="114x114" rel="apple-touch-icon-precomposed" href="dist/apple-touch-icon-114-precomposed.png"/>
+  <link sizes="72x72" rel="apple-touch-icon-precomposed" href="dist/apple-touch-icon-72-precomposed.png"/>
+  <link rel="apple-touch-icon-precomposed" href="dist/apple-touch-icon-57-precomposed.png"/>
+  <link rel="shortcut icon" href="dist/favicon.png"/>
+  
+</head>
+<body data-feedly-mini="yes">
+	<div id="segment-header" class="segment">  <!-- segment-header -->	
+		<div class="container">  <!-- container -->
+			<a id="logo" no-external="true" href="index.html"><img alt="logo hl7" src="dist/hl7-logo.png"/> </a>
+			<div id="hl7-status">
+				<b>Clinical Quality Language Release 1 STU2 (w/ Errata) (1.2.1)</b>
+			</div>       	
+			
+			<div id="hl7-nav">
+				 <a id="hl7-logo" no-external="true" href="http://www.hl7.org/">
+					<img height="50" alt="visit the hl7 website" width="42" src="dist/hl7-logo.png"/>
+				</a> 
+			</div>       	
+			<!--<div id="hl7-nav"><a id="hl7-logo" no-external="true" href="http://cql.hl7.org/STU2/search.cfm"><img alt="Search CQL" src="dist/search.png"/></a></div>-->
+		</div>
+		<div class="container">  <!-- container -->
+	</div></div>  <!-- /segment-header -->	
+
+	<div id="segment-navbar" class="segment">  <!-- segment-navbar -->
+		<div id="stripe"> </div>
+		<div class="container">  <!-- container -->
+   <!-- HEADER CONTENT -->
+ 	      		
+ 	      		      		
+			<nav class="navbar navbar-inverse">
+				<div class="container">
+					<button data-target=".navbar-inverse-collapse" class="navbar-toggle" data-toggle="collapse" type="button">
+						<span class="icon-bar"> </span>
+						<span class="icon-bar"> </span>
+						<span class="icon-bar"> </span>
+					</button>
+					<a class="navbar-brand hidden" href="index.html">CQL</a>
+					<div class="nav-collapse collapse navbar-inverse-collapse">
+						<ul class="nav navbar-nav">
+              <li><a href="index.html">Documentation</a></li>
+              <li><a href="grammar.html">Grammar</a></li>
+			  <li><a href="elm.html">ELM</a></li>
+			  <li><a href="examples.html">Examples</a></li>
+              <li><a href="tests.html">Tests</a></li>
+              <li><a href="../history.html">Version History</a><!--current--></li>
+
+						</ul>
+					</div>  <!-- /.nav-collapse -->
+
+          </div>  <!-- /.container -->
+			</nav>  <!-- /.navbar -->
+      		
+				
+  <!-- /HEADER CONTENT -->				
+		</div>  <!-- /container -->
+	</div>  <!-- /segment-navbar -->
+	
+	<div id="segment-content" class="segment">  <!-- segment-content -->
+	<div class="container">  <!-- container -->
+            <div class="row">
+            	<div class="inner-wrapper">
+  <!-- CONTENT CONTENT -->
+
+
+<div class="col-9">
+    
+<table class="cols"><tbody><tr><td id="wg"><a href="http://www.hl7.org/special/committees/dss/index.cfm" _target="blank">Clinical Decision Support</a> Work Group</td><td id="fmm"><a href="http://hl7.org/fhir/resource.html#maturity">Maturity Level</a>: 4</td><td id="ballot"><a href="http://hl7.org/fhir/help.html#status">Ballot Status</a>: STU 2.1</a></td></tr></tbody></table>
+    
+<h1>Appendix A – CQL Syntax Formal Specification</h1>
+    
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#declarations-2">1. Declarations</a></li>
+<li><a href="#type-specifiers">2. Type Specifiers</a></li>
+<li><a href="#statements-1">3. Statements</a></li>
+<li><a href="#queries-4">4. Queries</a></li>
+<li><a href="#expressions-1">5. Expressions</a></li>
+<li><a href="#terms">6. Terms</a></li>
+<li><a href="#lexer-rules">7. Lexer Rules</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The formal specification for the CQL syntax is defined using the ANTLR4 grammar framework. This framework is a general purpose cross-platform technology for describing computer languages. For more information on this framework, refer to the ANTLR website <a href="http://www.antlr.org/" class="bare">http://www.antlr.org/</a>.</p>
+</div>
+<div class="paragraph">
+<p>The material in this section is necessarily technical and assumes familiarity with language definition in general, and ANTLR4 grammars in particular. In addition, the g4 presented here is somewhat simplified for ease of reference and is provided for informative use only. For the complete, normative g4 definition, refer to the CQL.g4 file included with the specification package.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="declarations-2"><a class="anchor" href="#declarations-2"></a>1. Declarations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The CQL grammar is defined in a single ANTLR4 grammar file, CQL.g4. The root production rule is <em>library</em>, which specifies the overall structure for a library file:</p>
+</div>
+<div class="paragraph">
+<p>library</p>
+</div>
+<div class="paragraph">
+<p>:</p>
+</div>
+<div class="paragraph">
+<p>libraryDefinition?</p>
+</div>
+<div class="paragraph">
+<p>usingDefinition*</p>
+</div>
+<div class="paragraph">
+<p>includeDefinition*</p>
+</div>
+<div class="paragraph">
+<p>codesystemDefinition*</p>
+</div>
+<div class="paragraph">
+<p>valuesetDefinition*</p>
+</div>
+<div class="paragraph">
+<p>codeDefinition*</p>
+</div>
+<div class="paragraph">
+<p>conceptDefinition*</p>
+</div>
+<div class="paragraph">
+<p>parameterDefinition*</p>
+</div>
+<div class="paragraph">
+<p>statement*</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>Other than <em>statement</em>, these production rules define the declarations available for a library.</p>
+</div>
+<div class="paragraph">
+<p>libraryDefinition</p>
+</div>
+<div class="paragraph">
+<p>: 'library' identifier ('version' versionSpecifier)?</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>usingDefinition</p>
+</div>
+<div class="paragraph">
+<p>: 'using' modelIdentifier ('version' versionSpecifier)?</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>includeDefinition</p>
+</div>
+<div class="paragraph">
+<p>: 'include' identifier ('version' versionSpecifier)? ('called' localIdentifier)?</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>localIdentifier</p>
+</div>
+<div class="paragraph">
+<p>: identifier</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>accessModifier</p>
+</div>
+<div class="paragraph">
+<p>: 'public'</p>
+</div>
+<div class="paragraph">
+<p>| 'private'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>parameterDefinition</p>
+</div>
+<div class="paragraph">
+<p>: accessModifier? 'parameter' identifier typeSpecifier? ('default' expression)?</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>codesystemDefinition</p>
+</div>
+<div class="paragraph">
+<p>: accessModifier? 'codesystem' identifier ':' codesystemId<br/>
+('version' versionSpecifier)?</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>valuesetDefinition</p>
+</div>
+<div class="paragraph">
+<p>: accessModifier? 'valueset' identifier ':' valuesetId<br/>
+('version' versionSpecifier)? codesystems?</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>codesystems</p>
+</div>
+<div class="paragraph">
+<p>: 'codesystems' '\{' codesystemIdentifier (',' codesystemIdentifier)* '}'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>codesystemIdentifier</p>
+</div>
+<div class="paragraph">
+<p>: (libraryIdentifier '.')? identifier</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>libraryIdentifier</p>
+</div>
+<div class="paragraph">
+<p>: identifier</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>codeDefinition</p>
+</div>
+<div class="paragraph">
+<p>: accessModifier? 'code' identifier ':' codeId<br/>
+'from' codesystemIdentifier displayClause?</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>conceptDefinition</p>
+</div>
+<div class="paragraph">
+<p>: accessModifier? 'concept' identifier ':' '\{' codeIdentifier<br/>
+(',' codeIdentifier)* '}' displayClause?</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>codeIdentifier</p>
+</div>
+<div class="paragraph">
+<p>: (libraryIdentifier '.')? identifier</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>codesystemId</p>
+</div>
+<div class="paragraph">
+<p>: STRING</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>valuesetId</p>
+</div>
+<div class="paragraph">
+<p>: STRING</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>versionSpecifier</p>
+</div>
+<div class="paragraph">
+<p>: STRING</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>codeId</p>
+</div>
+<div class="paragraph">
+<p>: STRING</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="type-specifiers"><a class="anchor" href="#type-specifiers"></a>2. Type Specifiers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <em>typeSpecifier</em> production rule defines all type specifiers available in the language.</p>
+</div>
+<div class="paragraph">
+<p>typeSpecifier</p>
+</div>
+<div class="paragraph">
+<p>: namedTypeSpecifier</p>
+</div>
+<div class="paragraph">
+<p>| listTypeSpecifier</p>
+</div>
+<div class="paragraph">
+<p>| intervalTypeSpecifier</p>
+</div>
+<div class="paragraph">
+<p>| tupleTypeSpecifier</p>
+</div>
+<div class="paragraph">
+<p>| choiceTypeSpecifier</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>namedTypeSpecifier</p>
+</div>
+<div class="paragraph">
+<p>: (modelIdentifier '.')? identifier</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>modelIdentifier</p>
+</div>
+<div class="paragraph">
+<p>: identifier</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>listTypeSpecifier</p>
+</div>
+<div class="paragraph">
+<p>: 'List' '&lt;' typeSpecifier '&gt;'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>intervalTypeSpecifier</p>
+</div>
+<div class="paragraph">
+<p>: 'Interval' '&lt;' typeSpecifier '&gt;'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>tupleTypeSpecifier</p>
+</div>
+<div class="paragraph">
+<p>: 'Tuple' '\{' tupleElementDefinition (',' tupleElementDefinition)* '}'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>tupleElementDefinition</p>
+</div>
+<div class="paragraph">
+<p>: identifier typeSpecifier</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>choiceTypeSpecifier</p>
+</div>
+<div class="paragraph">
+<p>: 'Choice' '&lt;' typeSpecifier (',' typeSpecifier)* '&gt;'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="statements-1"><a class="anchor" href="#statements-1"></a>3. Statements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The main body of the library then consists of any number of statements, defined by the <em>statement</em> production rule:</p>
+</div>
+<div class="paragraph">
+<p>statement</p>
+</div>
+<div class="paragraph">
+<p>: expressionDefinition</p>
+</div>
+<div class="paragraph">
+<p>| contextDefinition</p>
+</div>
+<div class="paragraph">
+<p>| functionDefinition</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>expressionDefinition</p>
+</div>
+<div class="paragraph">
+<p>: 'define' accessModifier? identifier ':' expression</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>contextDefinition</p>
+</div>
+<div class="paragraph">
+<p>: 'context' identifier</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>functionDefinition</p>
+</div>
+<div class="paragraph">
+<p>: 'define' accessModifier? 'function' identifier<br/>
+'(' (operandDefinition (',' operandDefinition)*)? ')'</p>
+</div>
+<div class="paragraph">
+<p>('returns' typeSpecifier)?</p>
+</div>
+<div class="paragraph">
+<p>':' (functionBody | 'external')</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>operandDefinition</p>
+</div>
+<div class="paragraph">
+<p>: identifier typeSpecifier</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>functionBody</p>
+</div>
+<div class="paragraph">
+<p>: expression</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="queries-4"><a class="anchor" href="#queries-4"></a>4. Queries</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <em>query</em> production rule defines the syntax for queries within CQL:</p>
+</div>
+<div class="paragraph">
+<p>querySource</p>
+</div>
+<div class="paragraph">
+<p>: retrieve</p>
+</div>
+<div class="paragraph">
+<p>| qualifiedIdentifier</p>
+</div>
+<div class="paragraph">
+<p>| '(' expression ')'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>aliasedQuerySource</p>
+</div>
+<div class="paragraph">
+<p>: querySource alias</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>alias</p>
+</div>
+<div class="paragraph">
+<p>: identifier</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>queryInclusionClause</p>
+</div>
+<div class="paragraph">
+<p>: withClause</p>
+</div>
+<div class="paragraph">
+<p>| withoutClause</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>withClause</p>
+</div>
+<div class="paragraph">
+<p>: 'with' aliasedQuerySource 'such that' expression</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>withoutClause</p>
+</div>
+<div class="paragraph">
+<p>: 'without' aliasedQuerySource 'such that' expression</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>retrieve</p>
+</div>
+<div class="paragraph">
+<p>: '[' namedTypeSpecifier (':' (codePath 'in')? terminology)? ']'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>codePath</p>
+</div>
+<div class="paragraph">
+<p>: identifier</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>terminology</p>
+</div>
+<div class="paragraph">
+<p>: qualifiedIdentifier</p>
+</div>
+<div class="paragraph">
+<p>| expression</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>qualifier</p>
+</div>
+<div class="paragraph">
+<p>: identifier</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>query</p>
+</div>
+<div class="paragraph">
+<p>: sourceClause<br/>
+letClause?<br/>
+queryInclusionClause*<br/>
+whereClause?<br/>
+returnClause?<br/>
+sortClause?</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>sourceClause</p>
+</div>
+<div class="paragraph">
+<p>: singleSourceClause</p>
+</div>
+<div class="paragraph">
+<p>| multipleSourceClause</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>singleSourceClause</p>
+</div>
+<div class="paragraph">
+<p>: aliasedQuerySource</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>multipleSourceClause</p>
+</div>
+<div class="paragraph">
+<p>: 'from' aliasedQuerySource (',' aliasedQuerySource)*</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>letClause</p>
+</div>
+<div class="paragraph">
+<p>: 'let' letClauseItem (',' letClauseItem)*</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>letClauseItem</p>
+</div>
+<div class="paragraph">
+<p>: identifier ':' expression</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>whereClause</p>
+</div>
+<div class="paragraph">
+<p>: 'where' expression</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>returnClause</p>
+</div>
+<div class="paragraph">
+<p>: 'return' ('all' | 'distinct')? expression</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>sortClause</p>
+</div>
+<div class="paragraph">
+<p>: 'sort' ( sortDirection | ('by' sortByItem (',' sortByItem)*) )</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>sortDirection</p>
+</div>
+<div class="paragraph">
+<p>: 'asc' | 'ascending'</p>
+</div>
+<div class="paragraph">
+<p>| 'desc' | 'descending'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>sortByItem</p>
+</div>
+<div class="paragraph">
+<p>: expressionTerm sortDirection?</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>qualifiedIdentifier</p>
+</div>
+<div class="paragraph">
+<p>: (qualifier '.')* identifier</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="expressions-1"><a class="anchor" href="#expressions-1"></a>5. Expressions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <em>expression</em> production rule defines the syntax for all expressions within CQL:</p>
+</div>
+<div class="paragraph">
+<p>expression</p>
+</div>
+<div class="paragraph">
+<p>: expressionTerm</p>
+</div>
+<div class="paragraph">
+<p>| retrieve</p>
+</div>
+<div class="paragraph">
+<p>| query</p>
+</div>
+<div class="paragraph">
+<p>| expression 'is' 'not'? ('null' | 'true' | 'false')</p>
+</div>
+<div class="paragraph">
+<p>| expression ('is' | 'as') typeSpecifier</p>
+</div>
+<div class="paragraph">
+<p>| 'cast' expression 'as' typeSpecifier</p>
+</div>
+<div class="paragraph">
+<p>| 'not' expression</p>
+</div>
+<div class="paragraph">
+<p>| 'exists' expression</p>
+</div>
+<div class="paragraph">
+<p>| expression 'properly'? 'between' expressionTerm 'and' expressionTerm</p>
+</div>
+<div class="paragraph">
+<p>| pluralDateTimePrecision 'between' expressionTerm 'and' expressionTerm</p>
+</div>
+<div class="paragraph">
+<p>| 'difference' 'in'</p>
+</div>
+<div class="paragraph">
+<p>pluralDateTimePrecision 'between' expressionTerm 'and' expressionTerm</p>
+</div>
+<div class="paragraph">
+<p>| expression ('&#8656;' | '&lt;' | '&gt;' | '&gt;=') expression</p>
+</div>
+<div class="paragraph">
+<p>| expression intervalOperatorPhrase expression</p>
+</div>
+<div class="paragraph">
+<p>| expression ('=' | '!=' | '!=' | '~' | '!~') expression</p>
+</div>
+<div class="paragraph">
+<p>| expression ('in' | 'contains') dateTimePrecisionSpecifier? expression</p>
+</div>
+<div class="paragraph">
+<p>| expression 'and' expression</p>
+</div>
+<div class="paragraph">
+<p>| expression ('or' | 'xor') expression</p>
+</div>
+<div class="paragraph">
+<p>| expression 'implies' expression</p>
+</div>
+<div class="paragraph">
+<p>| expression ('|' | 'union' | 'intersect' | 'except') expression</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>dateTimePrecision</p>
+</div>
+<div class="paragraph">
+<p>: 'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second' | 'millisecond'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>dateTimeComponent</p>
+</div>
+<div class="paragraph">
+<p>: dateTimePrecision</p>
+</div>
+<div class="paragraph">
+<p>| 'date'</p>
+</div>
+<div class="paragraph">
+<p>| 'time'</p>
+</div>
+<div class="paragraph">
+<p>| 'timezone'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>pluralDateTimePrecision</p>
+</div>
+<div class="paragraph">
+<p>: 'years' | 'months' | 'weeks' | 'days'</p>
+</div>
+<div class="paragraph">
+<p>| 'hours' | 'minutes' | 'seconds' | 'milliseconds'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>expressionTerm</p>
+</div>
+<div class="paragraph">
+<p>: term</p>
+</div>
+<div class="paragraph">
+<p>| expressionTerm '.' invocation</p>
+</div>
+<div class="paragraph">
+<p>| expressionTerm '[' expression ']'</p>
+</div>
+<div class="paragraph">
+<p>| 'convert' expression 'to' typeSpecifier</p>
+</div>
+<div class="paragraph">
+<p>| ('+' | '-') expressionTerm</p>
+</div>
+<div class="paragraph">
+<p>| ('start' | 'end') 'of' expressionTerm</p>
+</div>
+<div class="paragraph">
+<p>| dateTimeComponent 'from' expressionTerm</p>
+</div>
+<div class="paragraph">
+<p>| 'duration' 'in' pluralDateTimePrecision 'of' expressionTerm</p>
+</div>
+<div class="paragraph">
+<p>| 'width' 'of' expressionTerm</p>
+</div>
+<div class="paragraph">
+<p>| 'successor' 'of' expressionTerm</p>
+</div>
+<div class="paragraph">
+<p>| 'predecessor' 'of' expressionTerm</p>
+</div>
+<div class="paragraph">
+<p>| 'singleton' 'from' expressionTerm</p>
+</div>
+<div class="paragraph">
+<p>| 'point' 'from' expressionTerm</p>
+</div>
+<div class="paragraph">
+<p>| ('minimum' | 'maximum') namedTypeSpecifier</p>
+</div>
+<div class="paragraph">
+<p>| expressionTerm '^' expressionTerm</p>
+</div>
+<div class="paragraph">
+<p>| expressionTerm ('*' | '/' | 'div' | 'mod') expressionTerm</p>
+</div>
+<div class="paragraph">
+<p>| expressionTerm ('+' | '-' | '&amp;') expressionTerm</p>
+</div>
+<div class="paragraph">
+<p>| 'if' expression 'then' expression 'else' expression</p>
+</div>
+<div class="paragraph">
+<p>| 'case' expression? caseExpressionItem+ 'else' expression 'end'</p>
+</div>
+<div class="paragraph">
+<p>| ('distinct' | 'collapse' | 'flatten') expression</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>caseExpressionItem</p>
+</div>
+<div class="paragraph">
+<p>: 'when' expression 'then' expression</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>dateTimePrecisionSpecifier</p>
+</div>
+<div class="paragraph">
+<p>: dateTimePrecision 'of'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>relativeQualifier</p>
+</div>
+<div class="paragraph">
+<p>: 'or before'</p>
+</div>
+<div class="paragraph">
+<p>| 'or after'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>offsetRelativeQualifier</p>
+</div>
+<div class="paragraph">
+<p>: 'or more'</p>
+</div>
+<div class="paragraph">
+<p>| 'or less'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>exclusiveRelativeQualifier</p>
+</div>
+<div class="paragraph">
+<p>: 'more than'</p>
+</div>
+<div class="paragraph">
+<p>| 'less than'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>quantityOffset</p>
+</div>
+<div class="paragraph">
+<p>: (quantityLiteral offsetRelativeQualifier? )</p>
+</div>
+<div class="paragraph">
+<p>| (exclusiveRelativeQualifier quantityLiteral)</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>intervalOperatorPhrase</p>
+</div>
+<div class="paragraph">
+<p>: ('starts' | 'ends' | 'occurs')? 'same' dateTimePrecision?</p>
+</div>
+<div class="paragraph">
+<p>(relativeQualifier | 'as') ('start' | 'end')?</p>
+</div>
+<div class="paragraph">
+<p>| 'properly'? 'includes' dateTimePrecisionSpecifier? ('start' | 'end')?</p>
+</div>
+<div class="paragraph">
+<p>| ('starts' | 'ends' | 'occurs')? 'properly'? ('during' | 'included in')<br/>
+dateTimePrecisionSpecifier?</p>
+</div>
+<div class="paragraph">
+<p>| ('starts' | 'ends' | 'occurs')? quantityOffset? ('before' | 'after')</p>
+</div>
+<div class="paragraph">
+<p>('start' | 'end')?</p>
+</div>
+<div class="paragraph">
+<p>| ('starts' | 'ends' | 'occurs')? 'properly'? 'within' quantityLiteral 'of'</p>
+</div>
+<div class="paragraph">
+<p>('start' | 'end')?</p>
+</div>
+<div class="paragraph">
+<p>| 'meets' ('before' | 'after')? dateTimePrecisionSpecifier?</p>
+</div>
+<div class="paragraph">
+<p>| 'overlaps' ('before' | 'after')? dateTimePrecisionSpecifier?</p>
+</div>
+<div class="paragraph">
+<p>| 'starts' dateTimePrecisionSpecifier?</p>
+</div>
+<div class="paragraph">
+<p>| 'ends' dateTimePrecisionSpecifier?</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="terms"><a class="anchor" href="#terms"></a>6. Terms</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <em>term</em> production rule defines the syntax for core expression terms within CQL:</p>
+</div>
+<div class="paragraph">
+<p>term</p>
+</div>
+<div class="paragraph">
+<p>: invocation</p>
+</div>
+<div class="paragraph">
+<p>| literal</p>
+</div>
+<div class="paragraph">
+<p>| externalConstant</p>
+</div>
+<div class="paragraph">
+<p>| intervalSelector</p>
+</div>
+<div class="paragraph">
+<p>| tupleSelector</p>
+</div>
+<div class="paragraph">
+<p>| instanceSelector</p>
+</div>
+<div class="paragraph">
+<p>| listSelector</p>
+</div>
+<div class="paragraph">
+<p>| codeSelector</p>
+</div>
+<div class="paragraph">
+<p>| conceptSelector</p>
+</div>
+<div class="paragraph">
+<p>| '(' expression ')'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>invocation</p>
+</div>
+<div class="paragraph">
+<p>: identifier</p>
+</div>
+<div class="paragraph">
+<p>| identifier '(' expression (',' expression)*')'</p>
+</div>
+<div class="paragraph">
+<p>| '$this'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>intervalSelector</p>
+</div>
+<div class="paragraph">
+<p>'Interval' ('['|'(') expression ',' expression (']'|')')</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>tupleSelector</p>
+</div>
+<div class="paragraph">
+<p>: 'Tuple'? '\{' (':' | (tupleElementSelector (',' tupleElementSelector)*)) '}'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>tupleElementSelector</p>
+</div>
+<div class="paragraph">
+<p>: identifier ':' expression</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>instanceSelector</p>
+</div>
+<div class="paragraph">
+<p>: namedTypeSpecifier '\{' (':' | (instanceElementSelector<br/>
+(',' instanceElementSelector)*)) '}'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>instanceElementSelector</p>
+</div>
+<div class="paragraph">
+<p>: identifier ':' expression</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>listSelector</p>
+</div>
+<div class="paragraph">
+<p>: ('List' ('&lt;' typeSpecifier '&gt;')?)? '\{' expression? (',' expression)* '}'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>displayClause</p>
+</div>
+<div class="paragraph">
+<p>: 'display' stringLiteral</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>codeSelector</p>
+</div>
+<div class="paragraph">
+<p>: 'Code' stringLiteral 'from' codesystemIdentifier displayClause?</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>conceptSelector</p>
+</div>
+<div class="paragraph">
+<p>: 'Concept' '\{' codeSelector (',' codeSelector)* '}' displayClause?</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>literal</p>
+</div>
+<div class="paragraph">
+<p>: nullLiteral</p>
+</div>
+<div class="paragraph">
+<p>| booleanLiteral</p>
+</div>
+<div class="paragraph">
+<p>| stringLiteral</p>
+</div>
+<div class="paragraph">
+<p>| dateTimeLiteral</p>
+</div>
+<div class="paragraph">
+<p>| timeLiteral</p>
+</div>
+<div class="paragraph">
+<p>| quantityLiteral</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>nullLiteral</p>
+</div>
+<div class="paragraph">
+<p>: 'null'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>booleanLiteral</p>
+</div>
+<div class="paragraph">
+<p>: 'true'</p>
+</div>
+<div class="paragraph">
+<p>| 'false'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>stringLiteral</p>
+</div>
+<div class="paragraph">
+<p>: STRING</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>dateTimeLiteral</p>
+</div>
+<div class="paragraph">
+<p>: DATETIME</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>timeLiteral</p>
+</div>
+<div class="paragraph">
+<p>: TIME</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>quantityLiteral</p>
+</div>
+<div class="paragraph">
+<p>: QUANTITY unit?</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>unit</p>
+</div>
+<div class="paragraph">
+<p>: dateTimePrecision</p>
+</div>
+<div class="paragraph">
+<p>| pluralDateTimePrecision</p>
+</div>
+<div class="paragraph">
+<p>| STRING // UCUM syntax for units of measure</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>identifier</p>
+</div>
+<div class="paragraph">
+<p>: IDENTIFIER | QUOTEDIDENTIFIER</p>
+</div>
+<div class="paragraph">
+<p>| 'all'</p>
+</div>
+<div class="paragraph">
+<p>| 'Code'</p>
+</div>
+<div class="paragraph">
+<p>| 'Concept'</p>
+</div>
+<div class="paragraph">
+<p>| 'contains'</p>
+</div>
+<div class="paragraph">
+<p>| 'date'</p>
+</div>
+<div class="paragraph">
+<p>| 'display'</p>
+</div>
+<div class="paragraph">
+<p>| 'distinct'</p>
+</div>
+<div class="paragraph">
+<p>| 'end'</p>
+</div>
+<div class="paragraph">
+<p>| 'exists'</p>
+</div>
+<div class="paragraph">
+<p>| 'not'</p>
+</div>
+<div class="paragraph">
+<p>| 'start'</p>
+</div>
+<div class="paragraph">
+<p>| 'time'</p>
+</div>
+<div class="paragraph">
+<p>| 'timezone'</p>
+</div>
+<div class="paragraph">
+<p>| 'version'</p>
+</div>
+<div class="paragraph">
+<p>| 'where'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="lexer-rules"><a class="anchor" href="#lexer-rules"></a>7. Lexer Rules</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The lexer rules define the terminal production rules in the language:</p>
+</div>
+<div class="paragraph">
+<p>IDENTIFIER</p>
+</div>
+<div class="paragraph">
+<p>: ([A-Za-z] | '<em>')([A-Za-z0-9] | '</em>')*</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>QUANTITY</p>
+</div>
+<div class="paragraph">
+<p>: <span class="0-9">('.'[0-9]</span>)?</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>QUOTEDIDENTIFIER</p>
+</div>
+<div class="paragraph">
+<p>: '"' (ESC | .)*? '"'</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>STRING</p>
+</div>
+<div class="paragraph">
+<p>: ('\'') (ESC | .)*? ('\'')</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>WS</p>
+</div>
+<div class="paragraph">
+<p>: (' ' | '\r' | '\t') <strong>&#8594;</strong> channel(HIDDEN)</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>NEWLINE</p>
+</div>
+<div class="paragraph">
+<p>: ('\n') <strong>&#8594;</strong> channel(HIDDEN)</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>COMMENT</p>
+</div>
+<div class="paragraph">
+<p>: '/<strong>' .</strong>? '<strong>/' *&#8594;</strong> channel(HIDDEN)</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+<div class="paragraph">
+<p>LINE_COMMENT</p>
+</div>
+<div class="paragraph">
+<p>: '//' ~[\r\n]* <strong>&#8594;</strong> channel(HIDDEN)</p>
+</div>
+<div class="paragraph">
+<p>;</p>
+</div>
+</div>
+</div>
+
+
+</div>
+
+
+				</div>  <!-- /inner-wrapper -->
+            </div>  <!-- /row -->
+        </div>  <!-- /container -->
+        
+    </div>  <!-- /segment-content -->
+
+
+	<div id="segment-footer" class="segment">  <!-- segment-footer -->
+		<div class="container">  <!-- container -->
+			<div class="inner-wrapper">
+				<p>
+        &copy; HL7.org 2014+. CQL STU2.1 (1.2 Published w/ Errata) generated on 2019-03-17 11:17:12 -0600
+        <span style="color: #FFFF77">| 
+               <a style="color: #81BEF7" rel="license" href="license.html">License</a> |
+               <a style="color: #81BEF7" target="_blank" href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=400">Propose a change</a>
+        </span>
+        </p>
+			</div>  <!-- /inner-wrapper -->
+		</div>  <!-- /container -->
+	</div>  <!-- /segment-footer -->
+
+	
+	<div id="segment-post-footer" class="segment hidden">  <!-- segment-post-footer -->
+		<div class="container">  <!-- container -->
+		</div>  <!-- /container -->
+	</div>  <!-- /segment-post-footer -->
+    
+      <!-- JS and analytics only. -->
+      <!-- Bootstrap core JavaScript
+================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+<script src="dist/jquery.js"> </script>     <!-- note keep space here, otherwise it will be transformed to empty tag -> fails -->
+<script src="dist/bootstrap.min.js"> </script>
+<script src="dist/respond.min.js"> </script>
+
+<script src="dist/fhir.js"> </script>
+
+  <!-- Analytics Below
+================================================== -->
+
+
+<div id="feedly-mini" title="feedly Mini tookit"></div></body></html>

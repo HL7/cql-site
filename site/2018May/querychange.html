@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<!-- saved from url=(0043)http://hl7.org/fhir/2016May/FHIRPath.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+  <title>Query Change Proposal</title>
+
+  
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="http://cql.hl7.org" name="author"/>
+
+  <link rel="stylesheet" href="dist/fhir.css"/>
+  <link rel="Prev" href="history.html"/>
+
+    <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="dist/bootstrap.css"/>
+  <link rel="stylesheet" href="dist/bootstrap-fhir.css"/>
+
+    <!-- Project extras -->
+  <link rel="stylesheet" href="dist/project.css"/>
+  <link rel="stylesheet" href="dist/pygments-manni.css"/>
+	<link rel="stylesheet" href="dist/jquery-ui.css"/>
+	<link rel="stylesheet" href="dist/cql.css"/>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- [if lt IE 9]>
+  <script src="./assets/js/html5shiv.js"></script>
+  <script src="./assets/js/respond.min.js"></script>
+  <![endif] -->
+
+    <!-- Favicons -->
+  <link sizes="144x144" rel="apple-touch-icon-precomposed" href="dist/apple-touch-icon-144-precomposed.png"/>
+  <link sizes="114x114" rel="apple-touch-icon-precomposed" href="dist/apple-touch-icon-114-precomposed.png"/>
+  <link sizes="72x72" rel="apple-touch-icon-precomposed" href="dist/apple-touch-icon-72-precomposed.png"/>
+  <link rel="apple-touch-icon-precomposed" href="dist/apple-touch-icon-57-precomposed.png"/>
+  <link rel="shortcut icon" href="dist/favicon.png"/>
+  
+</head>
+<body data-feedly-mini="yes">
+	<div id="segment-header" class="segment">  <!-- segment-header -->	
+		<div class="container">  <!-- container -->
+			<a id="logo" no-external="true" href="index.html"><img alt="logo hl7" src="dist/hl7-logo.png"/> </a>
+			<div id="hl7-status">
+				<b>Clinical Quality Language STU3 Ballot (1.3)</b>
+			</div>       	
+			
+			<div id="hl7-nav">
+				 <a id="hl7-logo" no-external="true" href="http://www.hl7.org/">
+					<img height="50" alt="visit the hl7 website" width="42" src="dist/hl7-logo.png"/>
+				</a> 
+			</div>       	
+			<!--<div id="hl7-nav"><a id="hl7-logo" no-external="true" href="http://cql.hl7.org/search.cfm"><img alt="Search CQL" src="dist/search.png"/></a></div>-->
+		</div>
+		<div class="container">  <!-- container -->
+	</div></div>  <!-- /segment-header -->	
+
+	<div id="segment-navbar" class="segment">  <!-- segment-navbar -->
+		<div id="stripe"> </div>
+		<div class="container">  <!-- container -->
+   <!-- HEADER CONTENT -->
+ 	      		
+ 	      		      		
+			<nav class="navbar navbar-inverse">
+				<div class="container">
+					<button data-target=".navbar-inverse-collapse" class="navbar-toggle" data-toggle="collapse" type="button">
+						<span class="icon-bar"> </span>
+						<span class="icon-bar"> </span>
+						<span class="icon-bar"> </span>
+					</button>
+					<a class="navbar-brand hidden" href="index.html">CQL</a>
+					<div class="nav-collapse collapse navbar-inverse-collapse">
+						<ul class="nav navbar-nav">
+              <li><a href="index.html">Documentation</a></li>
+              <li><a href="grammar.html">Grammar</a></li>
+			  <li><a href="elm.html">ELM</a></li>
+			  <li><a href="examples.html">Examples</a></li>
+              <li><a href="tests.html">Tests</a></li>
+              <li><a href="../history.html">Version History</a><!--current--></li>
+
+						</ul>
+					</div>  <!-- /.nav-collapse -->
+
+          </div>  <!-- /.container -->
+			</nav>  <!-- /.navbar -->
+      		
+				
+  <!-- /HEADER CONTENT -->				
+		</div>  <!-- /container -->
+	</div>  <!-- /segment-navbar -->
+	
+	<div id="segment-content" class="segment">  <!-- segment-content -->
+	<div class="container">  <!-- container -->
+            <div class="row">
+            	<div class="inner-wrapper">
+  <!-- CONTENT CONTENT -->
+
+
+<div class="col-9">
+    
+<table class="cols"><tbody><tr><td id="wg"><a href="http://www.hl7.org/special/committees/dss/index.cfm" _target="blank">Clinical Decision Support</a> Work Group</td><td id="fmm"><a href="http://hl7.org/fhir/resource.html#maturity">Maturity Level</a>: 4</td><td id="ballot"><a href="http://hl7.org/fhir/help.html#status">Ballot Status</a>: STU 3</a></td></tr></tbody></table>
+    
+<h1>Query Change Proposal</h1>
+    
+<div class="paragraph">
+<p>The current query syntax is defined as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-antlr4" data-lang="antlr4">query
+    : sourceClause letClause? queryInclusionClause* whereClause? returnClause? sortClause?
+    ;
+
+sourceClause
+    : singleSourceClause
+    | multipleSourceClause
+    ;
+
+singleSourceClause
+    : aliasedQuerySource
+    ;
+
+multipleSourceClause
+    : 'from' aliasedQuerySource (',' aliasedQuerySource)*
+    ;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This syntax allows two flavors of query, single-source, and multi-source. Single-source queries are introduced with a <em>trailing</em> alias, which provides a concise syntax for expressing simple queries:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cql" data-lang="cql">"Encounters" E where E.relevantPeriod during "Measurement Period"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To express queries involving more than one source, the <span class="kw">from</span> keyword is used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cql" data-lang="cql">  from
+    "Encounters" E,
+    "Warfarin Therapy" W,
+    "Parenteral Therapy" P
+  where W.effectiveTime starts during E.period
+    and P.effectiveTime starts during E.period</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However, the trailing alias syntax used in single-source queries complicates parsing of CQL because a single-source query cannot be detected until after the source has been parsed. This requires the parser to <em>backtrack</em>, and makes development of a CQL parser more difficult than it would otherwise be.</p>
+</div>
+<div class="paragraph">
+<p>We therefore propose the following change to the grammar:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-antlr4" data-lang="antlr4">query
+    : sourceClause letClause? queryInclusionClause* whereClause? returnClause? sortClause?
+    ;
+
+sourceClause
+    : 'from' aliasedQuerySource (',' aliasedQuerySource)*
+    ;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This would mean that all queries would have to start with the <span class="kw">from</span> keyword:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cql" data-lang="cql">from "Encounters" E where E.relevantPeriod during "Measurement Period"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>In support of keeping the current grammar:</strong>
+1. Not having an initial keyword was an explicit design choice for single-source queries because it&#8217;s a simpler syntax from an authoring perspective. Because most queries can be expressed with single-source queries, many authors would never have to learn about or deal with multi-source queries and the <span class="kw">from</span> keyword. Note that the Author&#8217;s Guide never mentions multi-source queries, they are discussed as a more advanced topic in the Developer&#8217;s Guide.
+2. Because the grammar is expressed using Antlr4, tooling to parse the grammar is automatically available in multiple platforms.</p>
+</div>
+<div class="paragraph">
+<p><strong>In support of changing the grammar as proposed:</strong>
+1. Although tooling exists to facilitate parsing, many environments will want to integrate CQL support into their existing infrastructure. In these cases, Antlr4 tooling is not a good fit, and integrators will encounter difficulty in parsing CQL using their own frameworks. Making this change reduces that barrier to adoption.
+2. Although requiring the <span class="kw">from</span> keyword on all queries is marginally less concise, it does mean that there is a consistent visual cue for the start of a query context.
+3. The syntax change would also allow queries on arbitrary expressions without needing to use enclosing parentheses. (i.e. <code>from A union B X</code> instead of requiring <code>from (A union B) X</code>)</p>
+</div>
+<div class="paragraph">
+<p>We are seeking additional input from all stakeholders on whether this change should be made.</p>
+</div>
+
+
+</div>
+
+
+				</div>  <!-- /inner-wrapper -->
+            </div>  <!-- /row -->
+        </div>  <!-- /container -->
+        
+    </div>  <!-- /segment-content -->
+
+
+	<div id="segment-footer" class="segment">  <!-- segment-footer -->
+		<div class="container">  <!-- container -->
+			<div class="inner-wrapper">
+				<p>
+        &copy; HL7.org 2014+. CQL STU3 (1.3 Draft) generated on 2019-03-17 11:17:12 -0600
+        <span style="color: #FFFF77">| 
+               <a style="color: #81BEF7" rel="license" href="license.html">License</a> |
+               <a style="color: #81BEF7" target="_blank" href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=400">Propose a change</a>
+        </span>
+        </p>
+			</div>  <!-- /inner-wrapper -->
+		</div>  <!-- /container -->
+	</div>  <!-- /segment-footer -->
+
+	
+	<div id="segment-post-footer" class="segment hidden">  <!-- segment-post-footer -->
+		<div class="container">  <!-- container -->
+		</div>  <!-- /container -->
+	</div>  <!-- /segment-post-footer -->
+    
+      <!-- JS and analytics only. -->
+      <!-- Bootstrap core JavaScript
+================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+<script src="dist/jquery.js"> </script>     <!-- note keep space here, otherwise it will be transformed to empty tag -> fails -->
+<script src="dist/bootstrap.min.js"> </script>
+<script src="dist/respond.min.js"> </script>
+
+<script src="dist/fhir.js"> </script>
+
+  <!-- Analytics Below
+================================================== -->
+
+
+<div id="feedly-mini" title="feedly Mini tookit"></div></body></html>

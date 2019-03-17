@@ -1,0 +1,17 @@
+﻿CQL : Validation Results
+=========================================
+
+err = 0, warn = 0, info = 0
+Generated Sun Mar 17 11:17:37 MDT 2019. FHIR version 4.1.0 for 4.0.0
+
+ Build Errors : 2 / 0
+ C:\Users\Bryn\Documents\Src\HL7\Specifications\CQL\Specifications\DSTU-Updates\R1.4\Source\resources\binary-cql-grammar : 0 / 0
+ C:\Users\Bryn\Documents\Src\HL7\Specifications\CQL\Specifications\DSTU-Updates\R1.4\Source\resources\binary-fhirpath-grammar : 0 / 0
+ C:\Users\Bryn\Documents\Src\HL7\Specifications\CQL\Specifications\DSTU-Updates\R1.4\Source\resources\ig : 0 / 0
+</table>
+== n/a ==
+ERROR: Implementation Guide: The link 'Binary-binary-fhirpath-grammar.html' for "??" cannot be resolved
+ERROR: Implementation Guide: The link 'Binary-binary-cql-grammar.html' for "??" cannot be resolved
+== C:\Users\Bryn\Documents\Src\HL7\Specifications\CQL\Specifications\DSTU-Updates\R1.4\Source\resources\binary-cql-grammar.json ==
+== C:\Users\Bryn\Documents\Src\HL7\Specifications\CQL\Specifications\DSTU-Updates\R1.4\Source\resources\binary-fhirpath-grammar.json ==
+== C:\Users\Bryn\Documents\Src\HL7\Specifications\CQL\Specifications\DSTU-Updates\R1.4\Source\resources\ig.xml ==

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<!-- saved from url=(0043)http://hl7.org/fhir/2016May/FHIRPath.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+  <title>Clinical Quality Language Grammar</title>
+
+  
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="http://cql.hl7.org" name="author"/>
+
+  <link rel="stylesheet" href="dist/fhir.css"/>
+  <link rel="Prev" href="history.html"/>
+
+    <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="dist/bootstrap.css"/>
+  <link rel="stylesheet" href="dist/bootstrap-fhir.css"/>
+
+    <!-- Project extras -->
+  <link rel="stylesheet" href="dist/project.css"/>
+  <link rel="stylesheet" href="dist/pygments-manni.css"/>
+	<link rel="stylesheet" href="dist/jquery-ui.css"/>
+	<link rel="stylesheet" href="dist/cql.css"/>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- [if lt IE 9]>
+  <script src="./assets/js/html5shiv.js"></script>
+  <script src="./assets/js/respond.min.js"></script>
+  <![endif] -->
+
+    <!-- Favicons -->
+  <link sizes="144x144" rel="apple-touch-icon-precomposed" href="dist/apple-touch-icon-144-precomposed.png"/>
+  <link sizes="114x114" rel="apple-touch-icon-precomposed" href="dist/apple-touch-icon-114-precomposed.png"/>
+  <link sizes="72x72" rel="apple-touch-icon-precomposed" href="dist/apple-touch-icon-72-precomposed.png"/>
+  <link rel="apple-touch-icon-precomposed" href="dist/apple-touch-icon-57-precomposed.png"/>
+  <link rel="shortcut icon" href="dist/favicon.png"/>
+  
+</head>
+<body data-feedly-mini="yes">
+	<div id="segment-header" class="segment">  <!-- segment-header -->	
+		<div class="container">  <!-- container -->
+			<a id="logo" no-external="true" href="index.html"><img alt="logo hl7" src="dist/hl7-logo.png"/> </a>
+			<div id="hl7-status">
+				<b>Clinical Quality Language Release 1 STU2 (w/ Errata) (1.2.1)</b>
+			</div>       	
+			
+			<div id="hl7-nav">
+				 <a id="hl7-logo" no-external="true" href="http://www.hl7.org/">
+					<img height="50" alt="visit the hl7 website" width="42" src="dist/hl7-logo.png"/>
+				</a> 
+			</div>       	
+			<!--<div id="hl7-nav"><a id="hl7-logo" no-external="true" href="http://cql.hl7.org/STU2/search.cfm"><img alt="Search CQL" src="dist/search.png"/></a></div>-->
+		</div>
+		<div class="container">  <!-- container -->
+	</div></div>  <!-- /segment-header -->	
+
+	<div id="segment-navbar" class="segment">  <!-- segment-navbar -->
+		<div id="stripe"> </div>
+		<div class="container">  <!-- container -->
+   <!-- HEADER CONTENT -->
+ 	      		
+ 	      		      		
+			<nav class="navbar navbar-inverse">
+				<div class="container">
+					<button data-target=".navbar-inverse-collapse" class="navbar-toggle" data-toggle="collapse" type="button">
+						<span class="icon-bar"> </span>
+						<span class="icon-bar"> </span>
+						<span class="icon-bar"> </span>
+					</button>
+					<a class="navbar-brand hidden" href="index.html">CQL</a>
+					<div class="nav-collapse collapse navbar-inverse-collapse">
+						<ul class="nav navbar-nav">
+              <li><a href="index.html">Documentation</a></li>
+              <li><a href="grammar.html">Grammar</a></li>
+			  <li><a href="elm.html">ELM</a></li>
+			  <li><a href="examples.html">Examples</a></li>
+              <li><a href="tests.html">Tests</a></li>
+              <li><a href="../history.html">Version History</a><!--current--></li>
+
+						</ul>
+					</div>  <!-- /.nav-collapse -->
+
+          </div>  <!-- /.container -->
+			</nav>  <!-- /.navbar -->
+      		
+				
+  <!-- /HEADER CONTENT -->				
+		</div>  <!-- /container -->
+	</div>  <!-- /segment-navbar -->
+	
+	<div id="segment-content" class="segment">  <!-- segment-content -->
+	<div class="container">  <!-- container -->
+            <div class="row">
+            	<div class="inner-wrapper">
+  <!-- CONTENT CONTENT -->
+
+
+<div class="col-9">
+    
+<table class="cols"><tbody><tr><td id="wg"><a href="http://www.hl7.org/special/committees/dss/index.cfm" _target="blank">Clinical Decision Support</a> Work Group</td><td id="fmm"><a href="http://hl7.org/fhir/resource.html#maturity">Maturity Level</a>: 4</td><td id="ballot"><a href="http://hl7.org/fhir/help.html#status">Ballot Status</a>: STU 2.1</a></td></tr></tbody></table>
+    
+<h1>Clinical Quality Language Grammar</h1>
+    
+<p>This page contains the <a href="http://www.antlr.org/">Antlr 4.0</a> grammar for Clinical Quality Language.</p>
+
+<pre>
+grammar cql;
+
+/*
+ * Clinical Quality Language Grammar Specification
+ * Version 1.2 - STU Release 2 w/ errata
+ */
+
+import fhirpath;
+
+/*
+ * Parser Rules
+ */
+
+library
+    :
+    libraryDefinition?
+    usingDefinition*
+    includeDefinition*
+    codesystemDefinition*
+    valuesetDefinition*
+    codeDefinition*
+    conceptDefinition*
+    parameterDefinition*
+    statement*
+    ;
+
+/*
+ * Definitions
+ */
+
+libraryDefinition
+    : 'library' identifier ('version' versionSpecifier)?
+    ;
+
+usingDefinition
+    : 'using' modelIdentifier ('version' versionSpecifier)?
+    ;
+
+includeDefinition
+    : 'include' identifier ('version' versionSpecifier)? ('called' localIdentifier)?
+    ;
+
+localIdentifier
+    : identifier
+    ;
+
+accessModifier
+    : 'public'
+    | 'private'
+    ;
+
+parameterDefinition
+    : accessModifier? 'parameter' identifier (typeSpecifier)? ('default' expression)?
+    ;
+
+codesystemDefinition
+    : accessModifier? 'codesystem' identifier ':' codesystemId ('version' versionSpecifier)?
+    ;
+
+valuesetDefinition
+    : accessModifier? 'valueset' identifier ':' valuesetId ('version' versionSpecifier)? codesystems?
+    ;
+
+codesystems
+    : 'codesystems' '{' codesystemIdentifier (',' codesystemIdentifier)* '}'
+    ;
+
+codesystemIdentifier
+    : (libraryIdentifier '.')? identifier
+    ;
+
+libraryIdentifier
+    : identifier
+    ;
+
+codeDefinition
+    : accessModifier? 'code' identifier ':' codeId 'from' codesystemIdentifier displayClause?
+    ;
+
+conceptDefinition
+    : accessModifier? 'concept' identifier ':' '{' codeIdentifier (',' codeIdentifier)* '}' displayClause?
+    ;
+
+codeIdentifier
+    : (libraryIdentifier '.')? identifier
+    ;
+
+codesystemId
+    : STRING
+    ;
+
+valuesetId
+    : STRING
+    ;
+
+versionSpecifier
+    : STRING
+    ;
+
+codeId
+    : STRING
+    ;
+
+/*
+ * Type Specifiers
+ */
+
+typeSpecifier
+    : namedTypeSpecifier
+    | listTypeSpecifier
+    | intervalTypeSpecifier
+    | tupleTypeSpecifier
+    | choiceTypeSpecifier
+    ;
+
+namedTypeSpecifier
+    : (modelIdentifier '.')? identifier
+    ;
+
+modelIdentifier
+    : identifier
+    ;
+
+listTypeSpecifier
+    : 'List' '&lt;' typeSpecifier '&gt;'
+    ;
+
+intervalTypeSpecifier
+    : 'Interval' '&lt;' typeSpecifier '&gt;'
+    ;
+
+tupleTypeSpecifier
+    : 'Tuple' '{' tupleElementDefinition (',' tupleElementDefinition)* '}'
+    ;
+
+tupleElementDefinition
+    : identifier typeSpecifier
+    ;
+
+choiceTypeSpecifier
+    : 'Choice' '&lt;' typeSpecifier (',' typeSpecifier)* '&gt;'
+    ;
+
+/*
+ * Statements
+ */
+
+statement
+    : expressionDefinition
+    | contextDefinition
+    | functionDefinition
+    ;
+
+expressionDefinition
+    : 'define' accessModifier? identifier ':' expression
+    ;
+
+contextDefinition
+    : 'context' identifier
+    ;
+
+functionDefinition
+    : 'define' accessModifier? 'function' identifier '(' (operandDefinition (',' operandDefinition)*)? ')'
+        ('returns' typeSpecifier)?
+        ':' (functionBody | 'external')
+    ;
+
+operandDefinition
+    : identifier typeSpecifier
+    ;
+
+functionBody
+    : expression
+    ;
+
+/*
+ * Expressions
+ */
+
+querySource
+    : retrieve
+    | qualifiedIdentifier
+    | '(' expression ')'
+    ;
+
+aliasedQuerySource
+    : querySource alias
+    ;
+
+alias
+    : identifier
+    ;
+
+queryInclusionClause
+    : withClause
+    | withoutClause
+    ;
+
+withClause
+    : 'with' aliasedQuerySource 'such that' expression
+    ;
+
+withoutClause
+    : 'without' aliasedQuerySource 'such that' expression
+    ;
+
+retrieve
+    : '[' namedTypeSpecifier (':' (codePath 'in')? terminology)? ']'
+    ;
+
+codePath
+    : identifier
+    ;
+
+terminology
+    : qualifiedIdentifier
+    | expression
+    ;
+
+qualifier
+    : identifier
+    ;
+
+query
+    : sourceClause letClause? queryInclusionClause* whereClause? returnClause? sortClause?
+    ;
+
+sourceClause
+    : singleSourceClause
+    | multipleSourceClause
+    ;
+
+singleSourceClause
+    : aliasedQuerySource
+    ;
+
+multipleSourceClause
+    : 'from' aliasedQuerySource (',' aliasedQuerySource)*
+    ;
+
+letClause
+    : 'let' letClauseItem (',' letClauseItem)*
+    ;
+
+letClauseItem
+    : identifier ':' expression
+    ;
+
+whereClause
+    : 'where' expression
+    ;
+
+returnClause
+    : 'return' ('all' | 'distinct')? expression
+    ;
+
+sortClause
+    : 'sort' ( sortDirection | ('by' sortByItem (',' sortByItem)*) )
+    ;
+
+sortDirection
+    : 'asc' | 'ascending'
+    | 'desc' | 'descending'
+    ;
+
+sortByItem
+    : expressionTerm sortDirection?
+    ;
+
+qualifiedIdentifier
+    : (qualifier '.')* identifier
+    ;
+
+expression
+    : expressionTerm                                                                                #termExpression
+    | retrieve                                                                                      #retrieveExpression
+    | query                                                                                         #queryExpression
+    | expression 'is' 'not'? ('null' | 'true' | 'false')                                            #booleanExpression
+    | expression ('is' | 'as') typeSpecifier                                                        #typeExpression
+    | 'cast' expression 'as' typeSpecifier                                                          #castExpression
+    | 'not' expression                                                                              #notExpression
+    | 'exists' expression                                                                           #existenceExpression
+    | expression 'properly'? 'between' expressionTerm 'and' expressionTerm                          #betweenExpression
+    | pluralDateTimePrecision 'between' expressionTerm 'and' expressionTerm                         #durationBetweenExpression
+    | 'difference' 'in' pluralDateTimePrecision 'between' expressionTerm 'and' expressionTerm       #differenceBetweenExpression
+    | expression ('&lt;=' | '&lt;' | '&gt;' | '&gt;=') expression                                               #inequalityExpression
+    | expression intervalOperatorPhrase expression                                                  #timingExpression
+    | expression ('=' | '!=' | '~' | '!~') expression                                               #equalityExpression
+    | expression ('in' | 'contains') dateTimePrecisionSpecifier? expression                         #membershipExpression
+    | expression 'and' expression                                                                   #andExpression
+    | expression ('or' | 'xor') expression                                                          #orExpression
+    | expression 'implies' expression                                                               #impliesExpression
+    | expression ('|' | 'union' | 'intersect' | 'except') expression                                #inFixSetExpression
+    ;
+
+dateTimePrecision
+    : 'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second' | 'millisecond'
+    ;
+
+dateTimeComponent
+    : dateTimePrecision
+    | 'date'
+    | 'time'
+    | 'timezone'
+    ;
+
+pluralDateTimePrecision
+    : 'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds' | 'milliseconds'
+    ;
+
+expressionTerm
+    : term                                                               #termExpressionTerm
+    | expressionTerm '.' invocation                                      #invocationExpressionTerm
+    | expressionTerm '[' expression ']'                                  #indexedExpressionTerm
+    | 'convert' expression 'to' typeSpecifier                            #conversionExpressionTerm
+    | ('+' | '-') expressionTerm                                         #polarityExpressionTerm
+    | ('start' | 'end') 'of' expressionTerm                              #timeBoundaryExpressionTerm
+    | dateTimeComponent 'from' expressionTerm                            #timeUnitExpressionTerm
+    | 'duration' 'in' pluralDateTimePrecision 'of' expressionTerm        #durationExpressionTerm
+    | 'width' 'of' expressionTerm                                        #widthExpressionTerm
+    | 'successor' 'of' expressionTerm                                    #successorExpressionTerm
+    | 'predecessor' 'of' expressionTerm                                  #predecessorExpressionTerm
+    | 'singleton' 'from' expressionTerm                                  #elementExtractorExpressionTerm
+    | 'point' 'from' expressionTerm                                      #pointExtractorExpressionTerm
+    | ('minimum' | 'maximum') namedTypeSpecifier                         #typeExtentExpressionTerm
+    | expressionTerm '^' expressionTerm                                  #powerExpressionTerm
+    | expressionTerm ('*' | '/' | 'div' | 'mod') expressionTerm          #multiplicationExpressionTerm
+    | expressionTerm ('+' | '-' | '&amp;') expressionTerm                    #additionExpressionTerm
+    | 'if' expression 'then' expression 'else' expression                #ifThenElseExpressionTerm
+    | 'case' expression? caseExpressionItem+ 'else' expression 'end'     #caseExpressionTerm
+    | ('distinct' | 'collapse' | 'flatten') expression                   #aggregateExpressionTerm
+    ;
+
+caseExpressionItem
+    : 'when' expression 'then' expression
+    ;
+
+dateTimePrecisionSpecifier
+    : dateTimePrecision 'of'
+    ;
+
+relativeQualifier
+    : 'or before'
+    | 'or after'
+    ;
+
+offsetRelativeQualifier
+    : 'or more'
+    | 'or less'
+    ;
+
+exclusiveRelativeQualifier
+    : 'less than'
+    | 'more than'
+    ;
+
+quantityOffset
+    : (quantity offsetRelativeQualifier?)
+    | (exclusiveRelativeQualifier quantity)
+    ;
+
+temporalRelationship
+    : ('on or'? ('before' | 'after'))
+    | (('before' | 'after') 'or on'?)
+    ;
+
+intervalOperatorPhrase
+    : ('starts' | 'ends' | 'occurs')? 'same' dateTimePrecision? (relativeQualifier | 'as') ('start' | 'end')?               #concurrentWithIntervalOperatorPhrase
+    | 'properly'? 'includes' dateTimePrecisionSpecifier? ('start' | 'end')?                                                 #includesIntervalOperatorPhrase
+    | ('starts' | 'ends' | 'occurs')? 'properly'? ('during' | 'included in') dateTimePrecisionSpecifier?                    #includedInIntervalOperatorPhrase
+    | ('starts' | 'ends' | 'occurs')? quantityOffset? temporalRelationship dateTimePrecisionSpecifier? ('start' | 'end')?   #beforeOrAfterIntervalOperatorPhrase
+    | ('starts' | 'ends' | 'occurs')? 'properly'? 'within' quantity 'of' ('start' | 'end')?                                 #withinIntervalOperatorPhrase
+    | 'meets' ('before' | 'after')? dateTimePrecisionSpecifier?                                                             #meetsIntervalOperatorPhrase
+    | 'overlaps' ('before' | 'after')? dateTimePrecisionSpecifier?                                                          #overlapsIntervalOperatorPhrase
+    | 'starts' dateTimePrecisionSpecifier?                                                                                  #startsIntervalOperatorPhrase
+    | 'ends' dateTimePrecisionSpecifier?                                                                                    #endsIntervalOperatorPhrase
+    ;
+
+term
+    : invocation            #invocationTerm
+    | literal               #literalTerm
+    | externalConstant      #externalConstantTerm
+    | intervalSelector      #intervalSelectorTerm
+    | tupleSelector         #tupleSelectorTerm
+    | instanceSelector      #instanceSelectorTerm
+    | listSelector          #listSelectorTerm
+    | codeSelector          #codeSelectorTerm
+    | conceptSelector       #conceptSelectorTerm
+    | '(' expression ')'    #parenthesizedTerm
+    ;
+
+literal
+    : ('true' | 'false')                                    #booleanLiteral
+    | 'null'                                                #nullLiteral
+    | STRING                                                #stringLiteral
+    | NUMBER                                                #numberLiteral
+    | DATETIME                                              #dateTimeLiteral
+    | TIME                                                  #timeLiteral
+    | quantity                                              #quantityLiteral
+    ;
+
+intervalSelector
+    : // TODO: Consider this as an alternative syntax for intervals... (would need to be moved up to expression to make it work)
+    //expression ( '..' | '*.' | '.*' | '**' ) expression;
+    'Interval' ('['|'(') expression ',' expression (']'|')')
+    ;
+
+tupleSelector
+    : 'Tuple'? '{' (':' | (tupleElementSelector (',' tupleElementSelector)*)) '}'
+    ;
+
+tupleElementSelector
+    : identifier ':' expression
+    ;
+
+instanceSelector
+    : namedTypeSpecifier '{' (':' | (instanceElementSelector (',' instanceElementSelector)*)) '}'
+    ;
+
+instanceElementSelector
+    : identifier ':' expression
+    ;
+
+listSelector
+    : ('List' ('&lt;' typeSpecifier '&gt;')?)? '{' (expression (',' expression)*)? '}'
+    ;
+
+displayClause
+    : 'display' STRING
+    ;
+
+codeSelector
+    : 'Code' STRING 'from' codesystemIdentifier displayClause?
+    ;
+
+conceptSelector
+    : 'Concept' '{' codeSelector (',' codeSelector)* '}' displayClause?
+    ;
+
+identifier
+    : IDENTIFIER | QUOTEDIDENTIFIER
+    // Include here any keyword that should not be a reserved word
+    | 'all'
+    | 'Code'
+    | 'code'
+    | 'Concept'
+    | 'concept'
+    | 'contains'
+    | 'date'
+    | 'display'
+    | 'distinct'
+    | 'end'
+    | 'exists'
+    | 'not'
+    | 'start'
+    | 'time'
+    | 'timezone'
+    | 'version'
+    | 'where'
+    ;
+
+
+
+</pre>
+
+<hr />
+<p>NOTE: CQL extends from the FHIRPath grammar, and so uses the core production rules defined there. The FHIRPath grammar is included here for reference only, the FHIRPath grammar below is part of the FHIRPath specification.
+—-</p>
+
+<pre>
+grammar fhirpath;
+
+// NOTE: This content is informative in this specification, it is normative in the 
+// FHIRPath specification (http://hl7.org/fhirpath) and reproduced here for convenience
+// and tooling purposes only.
+
+// Grammar rules
+
+//prog: line (line)*;
+//line: ID ( '(' expr ')') ':' expr '\r'? '\n';
+
+expression
+        : term                                                      #termExpression
+        | expression '.' invocation                                 #invocationExpression
+        | expression '[' expression ']'                             #indexerExpression
+        | ('+' | '-') expression                                    #polarityExpression
+        | expression ('*' | '/' | 'div' | 'mod') expression         #multiplicativeExpression
+        | expression ('+' | '-' | '&amp;') expression                   #additiveExpression
+        | expression '|' expression                                 #unionExpression
+        | expression ('&lt;=' | '&lt;' | '&gt;' | '&gt;=') expression           #inequalityExpression
+        | expression ('is' | 'as') typeSpecifier                    #typeExpression
+        | expression ('=' | '~' | '!=' | '!~') expression           #equalityExpression
+        | expression ('in' | 'contains') expression                 #membershipExpression
+        | expression 'and' expression                               #andExpression
+        | expression ('or' | 'xor') expression                      #orExpression
+        | expression 'implies' expression                           #impliesExpression
+        //| (IDENTIFIER)? '=&gt;' expression                             #lambdaExpression
+        ;
+
+term
+        : invocation                                            #invocationTerm
+        | literal                                               #literalTerm
+        | externalConstant                                      #externalConstantTerm
+        | '(' expression ')'                                    #parenthesizedTerm
+        ;
+
+literal
+        : '{' '}'                                               #nullLiteral
+        | ('true' | 'false')                                    #booleanLiteral
+        | STRING                                                #stringLiteral
+        | NUMBER                                                #numberLiteral
+        | DATETIME                                              #dateTimeLiteral
+        | TIME                                                  #timeLiteral
+        | quantity                                              #quantityLiteral
+        ;
+
+externalConstant
+        : '%' identifier
+        ;
+
+invocation                          // Terms that can be used after the function/member invocation '.'
+        : identifier                                            #memberInvocation
+        | function                                              #functionInvocation
+        | '$this'                                               #thisInvocation
+        ;
+
+function
+        : identifier '(' paramList? ')'
+        ;
+
+paramList
+        : expression (',' expression)*
+        ;
+
+quantity
+        : NUMBER unit?
+        ;
+
+unit
+        : dateTimePrecision
+        | pluralDateTimePrecision
+        | STRING // UCUM syntax for units of measure
+        ;
+
+dateTimePrecision
+        : 'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second' | 'millisecond'
+        ;
+
+pluralDateTimePrecision
+        : 'years' | 'months' | 'weeks' | 'days' | 'hours' | 'minutes' | 'seconds' | 'milliseconds'
+        ;
+
+typeSpecifier
+        : qualifiedIdentifier
+        ;
+
+qualifiedIdentifier
+        : identifier ('.' identifier)*
+        ;
+
+identifier
+        : IDENTIFIER
+        | QUOTEDIDENTIFIER
+        | 'as'
+        | 'is'
+        ;
+
+
+/****************************************************************
+    Lexical rules
+*****************************************************************/
+
+// Not sure why, but with these as lexical rules, when the grammar is imported into CQL, they are not correctly recognized
+// Moving the same rules into the literal production rule above corrects the issue
+//EMPTY
+//        : '{' '}'
+//        ;                      // To create an empty array (and avoid a NULL literal)
+
+//BOOL
+//        : 'true'
+//        | 'false'
+//        ;
+
+DATETIME
+        : '@'
+            [0-9][0-9][0-9][0-9] // year
+            (
+                '-'[0-9][0-9] // month
+                (
+                    '-'[0-9][0-9] // day
+                    (
+                        'T' TIMEFORMAT
+                    )?
+                 )?
+             )?
+             'Z'? // UTC specifier
+        ;
+
+TIME
+        : '@' 'T' TIMEFORMAT
+        ;
+
+fragment TIMEFORMAT
+        :
+            [0-9][0-9] (':'[0-9][0-9] (':'[0-9][0-9] ('.'[0-9]+)?)?)?
+            ('Z' | ('+' | '-') [0-9][0-9]':'[0-9][0-9])? // timezone
+        ;
+
+IDENTIFIER
+        : ([A-Za-z] | '_')([A-Za-z0-9] | '_')*            // Added _ to support CQL (FHIR could constrain it out)
+        ;
+
+QUOTEDIDENTIFIER
+        : '"' (ESC | .)*? '"'
+        ;
+
+STRING
+        : '\'' (ESC | .)*? '\''
+        ;
+
+// Also allows leading zeroes now (just like CQL and XSD)
+NUMBER
+        : [0-9]+('.' [0-9]+)?
+        ;
+
+// Pipe whitespace to the HIDDEN channel to support retrieving source text through the parser.
+WS
+        : [ \r\n\t]+ -&gt; channel(HIDDEN)
+        ;
+
+COMMENT
+        : '/*' .*? '*/' -&gt; channel(HIDDEN)
+        ;
+
+LINE_COMMENT
+        : '//' ~[\r\n]* -&gt; channel(HIDDEN)
+        ;
+
+fragment ESC
+        : '\\' (["'\\/fnrt] | UNICODE)    // allow \", \', \\, \/, \f, etc. and \uXXX
+        ;
+
+fragment UNICODE
+        : 'u' HEX HEX HEX HEX
+        ;
+
+fragment HEX
+        : [0-9a-fA-F]
+        ;
+
+
+</pre>
+
+
+
+</div>
+
+
+				</div>  <!-- /inner-wrapper -->
+            </div>  <!-- /row -->
+        </div>  <!-- /container -->
+        
+    </div>  <!-- /segment-content -->
+
+
+	<div id="segment-footer" class="segment">  <!-- segment-footer -->
+		<div class="container">  <!-- container -->
+			<div class="inner-wrapper">
+				<p>
+        &copy; HL7.org 2014+. CQL STU2.1 (1.2 Published w/ Errata) generated on 2019-03-17 11:17:12 -0600
+        <span style="color: #FFFF77">| 
+               <a style="color: #81BEF7" rel="license" href="license.html">License</a> |
+               <a style="color: #81BEF7" target="_blank" href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=400">Propose a change</a>
+        </span>
+        </p>
+			</div>  <!-- /inner-wrapper -->
+		</div>  <!-- /container -->
+	</div>  <!-- /segment-footer -->
+
+	
+	<div id="segment-post-footer" class="segment hidden">  <!-- segment-post-footer -->
+		<div class="container">  <!-- container -->
+		</div>  <!-- /container -->
+	</div>  <!-- /segment-post-footer -->
+    
+      <!-- JS and analytics only. -->
+      <!-- Bootstrap core JavaScript
+================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+<script src="dist/jquery.js"> </script>     <!-- note keep space here, otherwise it will be transformed to empty tag -> fails -->
+<script src="dist/bootstrap.min.js"> </script>
+<script src="dist/respond.min.js"> </script>
+
+<script src="dist/fhir.js"> </script>
+
+  <!-- Analytics Below
+================================================== -->
+
+
+<div id="feedly-mini" title="feedly Mini tookit"></div></body></html>

@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<!-- saved from url=(0043)http://hl7.org/fhir/2016May/FHIRPath.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+  <title>Appendix I – FHIRPath Function Translation</title>
+
+  
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="http://cql.hl7.org" name="author"/>
+
+  <link rel="stylesheet" href="dist/fhir.css"/>
+  <link rel="Prev" href="history.html"/>
+
+    <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="dist/bootstrap.css"/>
+  <link rel="stylesheet" href="dist/bootstrap-fhir.css"/>
+
+    <!-- Project extras -->
+  <link rel="stylesheet" href="dist/project.css"/>
+  <link rel="stylesheet" href="dist/pygments-manni.css"/>
+	<link rel="stylesheet" href="dist/jquery-ui.css"/>
+	<link rel="stylesheet" href="dist/cql.css"/>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- [if lt IE 9]>
+  <script src="./assets/js/html5shiv.js"></script>
+  <script src="./assets/js/respond.min.js"></script>
+  <![endif] -->
+
+    <!-- Favicons -->
+  <link sizes="144x144" rel="apple-touch-icon-precomposed" href="dist/apple-touch-icon-144-precomposed.png"/>
+  <link sizes="114x114" rel="apple-touch-icon-precomposed" href="dist/apple-touch-icon-114-precomposed.png"/>
+  <link sizes="72x72" rel="apple-touch-icon-precomposed" href="dist/apple-touch-icon-72-precomposed.png"/>
+  <link rel="apple-touch-icon-precomposed" href="dist/apple-touch-icon-57-precomposed.png"/>
+  <link rel="shortcut icon" href="dist/favicon.png"/>
+  
+</head>
+<body data-feedly-mini="yes">
+	<div id="segment-header" class="segment">  <!-- segment-header -->	
+		<div class="container">  <!-- container -->
+			<a id="logo" no-external="true" href="index.html"><img alt="logo hl7" src="dist/hl7-logo.png"/> </a>
+			<div id="hl7-status">
+				<b>Clinical Quality Language Release 1 STU2 (w/ Errata) (1.2.1)</b>
+			</div>       	
+			
+			<div id="hl7-nav">
+				 <a id="hl7-logo" no-external="true" href="http://www.hl7.org/">
+					<img height="50" alt="visit the hl7 website" width="42" src="dist/hl7-logo.png"/>
+				</a> 
+			</div>       	
+			<!--<div id="hl7-nav"><a id="hl7-logo" no-external="true" href="http://cql.hl7.org/STU2/search.cfm"><img alt="Search CQL" src="dist/search.png"/></a></div>-->
+		</div>
+		<div class="container">  <!-- container -->
+	</div></div>  <!-- /segment-header -->	
+
+	<div id="segment-navbar" class="segment">  <!-- segment-navbar -->
+		<div id="stripe"> </div>
+		<div class="container">  <!-- container -->
+   <!-- HEADER CONTENT -->
+ 	      		
+ 	      		      		
+			<nav class="navbar navbar-inverse">
+				<div class="container">
+					<button data-target=".navbar-inverse-collapse" class="navbar-toggle" data-toggle="collapse" type="button">
+						<span class="icon-bar"> </span>
+						<span class="icon-bar"> </span>
+						<span class="icon-bar"> </span>
+					</button>
+					<a class="navbar-brand hidden" href="index.html">CQL</a>
+					<div class="nav-collapse collapse navbar-inverse-collapse">
+						<ul class="nav navbar-nav">
+              <li><a href="index.html">Documentation</a></li>
+              <li><a href="grammar.html">Grammar</a></li>
+			  <li><a href="elm.html">ELM</a></li>
+			  <li><a href="examples.html">Examples</a></li>
+              <li><a href="tests.html">Tests</a></li>
+              <li><a href="../history.html">Version History</a><!--current--></li>
+
+						</ul>
+					</div>  <!-- /.nav-collapse -->
+
+          </div>  <!-- /.container -->
+			</nav>  <!-- /.navbar -->
+      		
+				
+  <!-- /HEADER CONTENT -->				
+		</div>  <!-- /container -->
+	</div>  <!-- /segment-navbar -->
+	
+	<div id="segment-content" class="segment">  <!-- segment-content -->
+	<div class="container">  <!-- container -->
+            <div class="row">
+            	<div class="inner-wrapper">
+  <!-- CONTENT CONTENT -->
+
+
+<div class="col-9">
+    
+<table class="cols"><tbody><tr><td id="wg"><a href="http://www.hl7.org/special/committees/dss/index.cfm" _target="blank">Clinical Decision Support</a> Work Group</td><td id="fmm"><a href="http://hl7.org/fhir/resource.html#maturity">Maturity Level</a>: 4</td><td id="ballot"><a href="http://hl7.org/fhir/help.html#status">Ballot Status</a>: STU 2.1</a></td></tr></tbody></table>
+    
+<h1>Appendix I – FHIRPath Function Translation</h1>
+    
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#all">1. .all()</a></li>
+<li><a href="#allfalse">2. .allFalse()</a></li>
+<li><a href="#alltrue-1">3. .allTrue()</a></li>
+<li><a href="#anyfalse">4. .anyFalse()</a></li>
+<li><a href="#anytrue-1">5. .anyTrue()</a></li>
+<li><a href="#as-1">6. .as()</a></li>
+<li><a href="#children-1">7. .children()</a></li>
+<li><a href="#combine-1">8. .combine()</a></li>
+<li><a href="#contains-2">9. .contains()</a></li>
+<li><a href="#count-1">10. .count()</a></li>
+<li><a href="#descendents-1">11. .descendents()</a></li>
+<li><a href="#distinct-1">12. .distinct()</a></li>
+<li><a href="#empty">13. .empty()</a></li>
+<li><a href="#endswith-1">14. .endsWith()</a></li>
+<li><a href="#exists-1">15. .exists()</a></li>
+<li><a href="#first-1">16. .first()</a></li>
+<li><a href="#iif">17. .iif()</a></li>
+<li><a href="#indexof-1">18. .indexOf()</a></li>
+<li><a href="#is-1">19. .is()</a></li>
+<li><a href="#isdistinct">20. .isDistinct()</a></li>
+<li><a href="#last-1">21. .last()</a></li>
+<li><a href="#lastindexof">22. .lastIndexOf()</a></li>
+<li><a href="#length-2">23. .length()</a></li>
+<li><a href="#matches-1">24. .matches()</a></li>
+<li><a href="#oftype">25. .ofType()</a></li>
+<li><a href="#not-1">26. .not()</a></li>
+<li><a href="#now-1">27. .now()</a></li>
+<li><a href="#repeat">28. .repeat()</a></li>
+<li><a href="#replace">29. .replace()</a></li>
+<li><a href="#replacematches-1">30. .replaceMatches()</a></li>
+<li><a href="#select">31. .select()</a></li>
+<li><a href="#single">32. .single()</a></li>
+<li><a href="#skip-1">33. .skip()</a></li>
+<li><a href="#startswith-1">34. .startsWith()</a></li>
+<li><a href="#subsetof">35. .subsetOf()</a></li>
+<li><a href="#substring-1">36. .substring()</a></li>
+<li><a href="#supersetof">37. .supersetOf()</a></li>
+<li><a href="#tail-1">38. .tail()</a></li>
+<li><a href="#take-1">39. .take()</a></li>
+<li><a href="#toboolean-1">40. .toBoolean()</a></li>
+<li><a href="#todatetime-1">41. .toDateTime()</a></li>
+<li><a href="#today-1">42. .today()</a></li>
+<li><a href="#todecimal-1">43. .toDecimal()</a></li>
+<li><a href="#tointeger-1">44. .toInteger()</a></li>
+<li><a href="#tostring-1">45. .toString()</a></li>
+<li><a href="#totime-1">46. .toTime()</a></li>
+<li><a href="#trace">47. .trace()</a></li>
+<li><a href="#where">48. .where()</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This appendix provides detailed mappings for each FHIRPath function in terms of the ELM output produced.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="all"><a class="anchor" href="#all"></a>1. .all()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.all(&lt;condition&gt;) === AllTrue(X $this let a: &lt;condition&gt; where a return a)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="allfalse"><a class="anchor" href="#allfalse"></a>2. .allFalse()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.allFalse() === AllTrue(X A return not A)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="alltrue-1"><a class="anchor" href="#alltrue-1"></a>3. .allTrue()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.allTrue() === AllTrue(X)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="anyfalse"><a class="anchor" href="#anyfalse"></a>4. .anyFalse()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.anyFalse() === AnyTrue(X A return not A)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="anytrue-1"><a class="anchor" href="#anytrue-1"></a>5. .anyTrue()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.anyTrue() === AnyTrue(X)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="as-1"><a class="anchor" href="#as-1"></a>6. .as()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.as(&lt;type&gt;) === X as &lt;type&gt;</p>
+</div>
+<div class="paragraph">
+<p>X.as(&lt;type&gt;) === X a where a is &lt;type&gt; return a as &lt;type&gt;</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="children-1"><a class="anchor" href="#children-1"></a>7. .children()</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="combine-1"><a class="anchor" href="#combine-1"></a>8. .combine()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<div class="title">children(X) === Children(X)</div>
+<p>X.combine(Y) === Flatten(\{ X, Y })</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="contains-2"><a class="anchor" href="#contains-2"></a>9. .contains()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.contains(Y) === PositionOf(Y, X) &gt;= 0</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="count-1"><a class="anchor" href="#count-1"></a>10. .count()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.count() === Count(X)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="descendents-1"><a class="anchor" href="#descendents-1"></a>11. .descendents()</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="distinct-1"><a class="anchor" href="#distinct-1"></a>12. .distinct()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<div class="title">descendents(X) === Descendents(X)</div>
+<p>X.distinct() === distinct X</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="empty"><a class="anchor" href="#empty"></a>13. .empty()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.empty() === not exists X</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="endswith-1"><a class="anchor" href="#endswith-1"></a>14. .endsWith()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.endsWith(Y) === EndsWith(X, Y)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="exists-1"><a class="anchor" href="#exists-1"></a>15. .exists()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.exists() === exists X</p>
+</div>
+<div class="paragraph">
+<p>X.exists(&lt;condition&gt;) === exists (X $this where &lt;condition&gt;)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="first-1"><a class="anchor" href="#first-1"></a>16. .first()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.first() === First(X)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="iif"><a class="anchor" href="#iif"></a>17. .iif()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.iif(Y) === if X then Y else null</p>
+</div>
+<div class="paragraph">
+<p>X.iif(Y, Z) === if X then Y else Z</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="indexof-1"><a class="anchor" href="#indexof-1"></a>18. .indexOf()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.indexOf(Y) === PositionOf(Y, X) // Note carefully the order of arguments here, it’s the opposite of IndexOf</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="is-1"><a class="anchor" href="#is-1"></a>19. .is()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.is(&lt;type&gt;) === X is &lt;type&gt;</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="isdistinct"><a class="anchor" href="#isdistinct"></a>20. .isDistinct()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.isDistinct() === Count(X) = Count(distinct X)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="last-1"><a class="anchor" href="#last-1"></a>21. .last()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.last() === Last(X)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="lastindexof"><a class="anchor" href="#lastindexof"></a>22. .lastIndexOf()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.lastIndexOf(Y) === LastPositionOf(Y, X) // Note carefully the order of arguments here, it’s the opposite of lastIndexOf.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="length-2"><a class="anchor" href="#length-2"></a>23. .length()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.length() === Length(X)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="matches-1"><a class="anchor" href="#matches-1"></a>24. .matches()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.matches(Y) === Matches(X, Y)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="oftype"><a class="anchor" href="#oftype"></a>25. .ofType()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.ofType(T) === X $this where $this is T</p>
+</div>
+<div class="paragraph">
+<p>Note that the argument T is required to be a literal string, and is interpreted as the name of a type. For non-named-types, type specifier syntax applies.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="not-1"><a class="anchor" href="#not-1"></a>26. .not()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.not() === not X</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="now-1"><a class="anchor" href="#now-1"></a>27. .now()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>now() === Now()</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="repeat"><a class="anchor" href="#repeat"></a>28. .repeat()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.repeat(&lt;element&gt;) === Repeat(X, &lt;element&gt;)</p>
+</div>
+<div class="paragraph">
+<p>The type of X.repeat(&lt;element&gt;) is inferred as the type of:</p>
+</div>
+<div class="paragraph">
+<p>X.select(&lt;element&gt;).select(&lt;element&gt;)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="replace"><a class="anchor" href="#replace"></a>29. .replace()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.replace(Y, Z) === Replace(X, Y, Z)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="replacematches-1"><a class="anchor" href="#replacematches-1"></a>30. .replaceMatches()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.replaceMatches(Y, Z) === ReplaceMatches(X, Y, Z)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="select"><a class="anchor" href="#select"></a>31. .select()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If the result type of &lt;element&gt; is not list-valued:</p>
+</div>
+<div class="paragraph">
+<p>X.select(&lt;element&gt;) === X $this let a: &lt;element&gt; where a is not null return a</p>
+</div>
+<div class="paragraph">
+<p>If the result type of &lt;element&gt; is list-valued:</p>
+</div>
+<div class="paragraph">
+<p>X.select(&lt;element&gt;) === Flatten(X $this let a: &lt;element&gt; where a is not null return a)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="single"><a class="anchor" href="#single"></a>32. .single()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.single() === singleton from X</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="skip-1"><a class="anchor" href="#skip-1"></a>33. .skip()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.skip(Y) === Slice(X, Y, null)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="startswith-1"><a class="anchor" href="#startswith-1"></a>34. .startsWith()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.startsWith(Y) === StartsWith(X, Y)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="subsetof"><a class="anchor" href="#subsetof"></a>35. .subsetOf()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.subsetOf(Y) === X included in Y</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="substring-1"><a class="anchor" href="#substring-1"></a>36. .substring()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.substring(Y) === SubString(X, Y)</p>
+</div>
+<div class="paragraph">
+<p>X.substring(Y, Z) === SubString(X, Y, Z)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="supersetof"><a class="anchor" href="#supersetof"></a>37. .supersetOf()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.supersetOf(Y) === X includes Y</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tail-1"><a class="anchor" href="#tail-1"></a>38. .tail()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.tail() === Slice(X, 1, null)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="take-1"><a class="anchor" href="#take-1"></a>39. .take()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.take(Y) === Slice(X, 0, Y)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="toboolean-1"><a class="anchor" href="#toboolean-1"></a>40. .toBoolean()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.toBoolean() === ToBoolean(X)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="todatetime-1"><a class="anchor" href="#todatetime-1"></a>41. .toDateTime()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.toDateTime() === ToDateTime(X)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="today-1"><a class="anchor" href="#today-1"></a>42. .today()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>today() === Today()</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="todecimal-1"><a class="anchor" href="#todecimal-1"></a>43. .toDecimal()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.toDecimal() === ToDecimal(X)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tointeger-1"><a class="anchor" href="#tointeger-1"></a>44. .toInteger()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.toInteger() === ToInteger(X)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tostring-1"><a class="anchor" href="#tostring-1"></a>45. .toString()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.toString() === ToString(X)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="totime-1"><a class="anchor" href="#totime-1"></a>46. .toTime()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.toTime() === ToTime(X)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="trace"><a class="anchor" href="#trace"></a>47. .trace()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.output(Y) === Trace(X, Y) // Add to ELM</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="where"><a class="anchor" href="#where"></a>48. .where()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>X.where(&lt;condition&gt;) === X $this where &lt;condition&gt;</p>
+</div>
+</div>
+</div>
+
+
+</div>
+
+
+				</div>  <!-- /inner-wrapper -->
+            </div>  <!-- /row -->
+        </div>  <!-- /container -->
+        
+    </div>  <!-- /segment-content -->
+
+
+	<div id="segment-footer" class="segment">  <!-- segment-footer -->
+		<div class="container">  <!-- container -->
+			<div class="inner-wrapper">
+				<p>
+        &copy; HL7.org 2014+. CQL STU2.1 (1.2 Published w/ Errata) generated on 2019-03-17 11:17:12 -0600
+        <span style="color: #FFFF77">| 
+               <a style="color: #81BEF7" rel="license" href="license.html">License</a> |
+               <a style="color: #81BEF7" target="_blank" href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=400">Propose a change</a>
+        </span>
+        </p>
+			</div>  <!-- /inner-wrapper -->
+		</div>  <!-- /container -->
+	</div>  <!-- /segment-footer -->
+
+	
+	<div id="segment-post-footer" class="segment hidden">  <!-- segment-post-footer -->
+		<div class="container">  <!-- container -->
+		</div>  <!-- /container -->
+	</div>  <!-- /segment-post-footer -->
+    
+      <!-- JS and analytics only. -->
+      <!-- Bootstrap core JavaScript
+================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+<script src="dist/jquery.js"> </script>     <!-- note keep space here, otherwise it will be transformed to empty tag -> fails -->
+<script src="dist/bootstrap.min.js"> </script>
+<script src="dist/respond.min.js"> </script>
+
+<script src="dist/fhir.js"> </script>
+
+  <!-- Analytics Below
+================================================== -->
+
+
+<div id="feedly-mini" title="feedly Mini tookit"></div></body></html>
